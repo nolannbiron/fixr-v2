@@ -1,0 +1,10 @@
+{
+    "general": {
+        "loading": "Loading in progress"
+    },
+    "error": {
+        "title": "Error",
+        "unexpected": "Something unexpected happened",
+        "refreshOrContact": "Please refresh the page or contact an admin if the problem persists"
+    }
+}

@@ -1,0 +1,9 @@
+{
+    "plugins": ["@typescript-eslint"],
+    "extends": ["plugin:@typescript-eslint/recommended"],
+    "rules": {
+        "react-hooks/exhaustive-deps": "off",
+        "@typescript-eslint/no-explicit-any": "off"
+    },
+    "ignorePatterns": ["node_modules/"]
+}

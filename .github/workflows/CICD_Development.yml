@@ -1,0 +1,38 @@
+name: FIXR ADMIN CICD DEV
+
+on:
+    push:
+        branches: [development]
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                node-version: [16.x]
+
+        steps:
+            - name: Checkout 🛎️
+              uses: actions/checkout@v2
+              with:
+                  persist-credentials: false
+            - name: Use Node.js ${{ matrix.node-version }}
+              uses: actions/setup-node@v2
+              with:
+                  node-version: ${{ matrix.node-version }}
+                  cache: 'npm'
+            - name: Install Dependencies 📦
+              run: npm install
+            - name: Build 🏗️
+              run: npm run staging
+              env:
+                  VITE_API_BASE_URL: ${{ secrets.VITE_API_BASE_URL_DEV }}
+            - name: Deploy 🚀
+              env:
+                  PRIVATE_KEY: ${{ secrets.AWS_PRIVATE_PEM  }}
+                  HOSTNAME: ${{ secrets.AWS_HOSTNAME  }}
+                  USER_NAME: ${{ secrets.AWS_USER_NAME  }}
+              run: |
+                  echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
+                  ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} "rm -rf /home/ubuntu/fixr/dist"
+                  scp -o StrictHostKeyChecking=no -i private_key -r dist ${USER_NAME}@${HOSTNAME}:/home/ubuntu/fixr
