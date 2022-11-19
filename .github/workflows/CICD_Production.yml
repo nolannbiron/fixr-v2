@@ -1,8 +1,8 @@
-name: FIXR ADMIN CICD DEV
+name: FIXR ADMIN CICD PROD
 
 on:
     push:
-        branches: [development]
+        branches: [main, master]
 
 jobs:
     build:
@@ -30,9 +30,9 @@ jobs:
             - name: Deploy 🚀
               env:
                   PRIVATE_KEY: ${{ secrets.AWS_PRIVATE_PEM  }}
-                  HOSTNAME: ${{ secrets.AWS_HOSTNAME_DEV  }}
+                  HOSTNAME: ${{ secrets.AWS_HOSTNAME_PROD  }}
                   USER_NAME: ${{ secrets.AWS_USER_NAME  }}
               run: |
                   echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
-                  ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} "rm -rf /home/ubuntu/fixr-dev/dist"
-                  scp -o StrictHostKeyChecking=no -i private_key -r dist ${USER_NAME}@${HOSTNAME}:/home/ubuntu/fixr-dev
+                  ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} "rm -rf /home/ubuntu/fixr/dist"
+                  scp -o StrictHostKeyChecking=no -i private_key -r dist ${USER_NAME}@${HOSTNAME}:/home/ubuntu/fixr
