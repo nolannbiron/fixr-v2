@@ -13,6 +13,7 @@ export const adaptServerStudio = (serverStudio: ServerStudio): IStudio => {
         updatedAt: serverStudio.updatedAt,
         description: serverStudio.description,
         settings: serverStudio.settings,
+        address: serverStudio.address,
     }
 }
 

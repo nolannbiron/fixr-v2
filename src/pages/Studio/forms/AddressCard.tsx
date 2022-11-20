@@ -1,6 +1,18 @@
-import { BoxProps, Button, Divider, Flex, FormControl, FormLabel, Input, Stack } from '@chakra-ui/react'
-import { useState } from 'react'
+import {
+    BoxProps,
+    Button,
+    Divider,
+    Flex,
+    FormControl,
+    FormLabel,
+    HStack,
+    Input,
+    Stack,
+    useToast,
+} from '@chakra-ui/react'
+import { FormEvent, useEffect, useState } from 'react'
 import { IStudio } from '../../../api/studio/types'
+import { useUpdateStudio } from '../../../api/studio/useStudio'
 import Card from '../../../components/Card/Card'
 
 interface Props extends BoxProps {
@@ -8,37 +20,78 @@ interface Props extends BoxProps {
 }
 
 export default function AddressForm({ studio, ...props }: Props): JSX.Element {
-    const [formData, setFormData] = useState<Partial<IStudio>>(studio)
+    const [formData, setFormData] = useState<Partial<IStudio['address']>>(studio.address)
+    const { mutate: updateStudio } = useUpdateStudio()
+    const toast = useToast({ position: 'top-right' })
 
-    const handleChange = (key: keyof Partial<IStudio>, value: IStudio[keyof IStudio]) => {
+    useEffect(() => {
+        setFormData(studio.address)
+    }, [studio.address])
+
+    const handleChange = (
+        key: keyof Partial<IStudio['address']>,
+        value: IStudio['address'][keyof IStudio['address']]
+    ) => {
         setFormData({ ...formData, [key]: value })
     }
 
+    const handleSubmit = (e: FormEvent) => {
+        e.preventDefault()
+        console.log(formData)
+        updateStudio(
+            { id: studio.id, address: formData },
+            {
+                onSuccess: () => {
+                    toast({
+                        title: 'Adresse mise à jour',
+                        description: 'Votre adresse a bien été mise à jour.',
+                        status: 'success',
+                    })
+                },
+            }
+        )
+    }
+
     return (
-        <Card as="form" {...props}>
+        <Card as="form" onSubmit={handleSubmit} {...props}>
             <Stack spacing="5" px={{ base: '4', md: '6' }} py={{ base: '5', md: '6' }}>
-                <FormControl id="street">
-                    <FormLabel>Street</FormLabel>
-                    <Input value={formData.name} onChange={(e) => handleChange('name', e.currentTarget.value)} />
-                </FormControl>
+                <HStack>
+                    <FormControl w="auto" id="number">
+                        <FormLabel>Numéro</FormLabel>
+                        <Input
+                            value={formData.streetNumber ?? ''}
+                            onChange={(e) => handleChange('streetNumber', e.target.value)}
+                            w="full"
+                        />
+                    </FormControl>
+                    <FormControl w="85%" flex={1} id="street">
+                        <FormLabel>Street</FormLabel>
+                        <Input
+                            value={formData.street ?? ''}
+                            onChange={(e) => handleChange('street', e.currentTarget.value)}
+                        />
+                    </FormControl>
+                </HStack>
                 <Stack spacing="6" direction={{ base: 'column', md: 'row' }}>
                     <FormControl id="city">
                         <FormLabel>City</FormLabel>
-                        <Input defaultValue="Berlin" />
-                    </FormControl>
-                    <FormControl id="state">
-                        <FormLabel>State / Province</FormLabel>
-                        <Input />
+                        <Input
+                            value={formData.city ?? ''}
+                            onChange={(e) => handleChange('city', e.currentTarget.value)}
+                        />
                     </FormControl>
                     <FormControl id="zip">
-                        <FormLabel>ZIP/ Postal Code</FormLabel>
-                        <Input defaultValue="10961" />
+                        <FormLabel>Postal Code</FormLabel>
+                        <Input
+                            value={formData.postalCode ?? ''}
+                            onChange={(e) => handleChange('postalCode', e.currentTarget.value)}
+                        />
                     </FormControl>
                 </Stack>
             </Stack>
             <Divider />
             <Flex direction="row-reverse" py="4" px={{ base: '4', md: '6' }}>
-                <Button type="submit" variant="primary">
+                <Button isDisabled={formData === studio.address} onClick={handleSubmit} type="submit" variant="primary">
                     Enregistrer
                 </Button>
             </Flex>

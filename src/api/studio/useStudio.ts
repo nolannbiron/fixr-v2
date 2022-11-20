@@ -36,7 +36,7 @@ export const useGetStudios = () => {
 
 export const useUpdateStudio = () => {
     const queryClient = useQueryClient()
-    return useMutation<ResponseStudio, AxiosError, Partial<IStudio>, ResponseStudio>(
+    return useMutation<ResponseStudio, AxiosError, Partial<IStudio> & { id: string }, ResponseStudio>(
         (studio) => axios.patch(`/studio/${studio.id}`, studio).then((res) => res.data),
         {
             onSuccess: () => {

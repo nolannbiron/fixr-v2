@@ -23,6 +23,15 @@ export interface IStudio {
             color: string
         }
     }
+    address: {
+        fullName?: string
+        city?: string
+        country?: string
+        postalCode?: string
+        street?: string
+        streetNumber?: string
+        coordinates?: number[]
+    }
 }
 
 export interface ServerStudio {
@@ -40,5 +49,14 @@ export interface ServerStudio {
         theme: {
             color: string
         }
+    }
+    address: {
+        fullName?: string
+        city?: string
+        country?: string
+        postalCode?: string
+        street?: string
+        streetNumber?: string
+        coordinates?: number[]
     }
 }
