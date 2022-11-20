@@ -8,7 +8,7 @@ export interface IPicture {
 }
 
 export interface StudioDetails {
-    id: string
+    _id: string
     data: string
 }
 

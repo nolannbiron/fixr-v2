@@ -90,14 +90,14 @@ export default function RulesCard({ studio, detailsKey, ...props }: Props): JSX.
                     <FormLabel>{detailsKey}</FormLabel>
                     <VStack spacing={3}>
                         {values?.map((value, index) => (
-                            <Flex w="full" key={value.id}>
+                            <Flex w="full" key={value._id}>
                                 <Input
-                                    onChangeCapture={(e) => handleUpdate(e.currentTarget.value, value.id)}
+                                    onChange={(e) => handleUpdate(e.currentTarget.value, value._id)}
                                     key={index}
                                     value={value.data}
                                 />
                                 <IconButton
-                                    onClick={() => handleRemove(value.id)}
+                                    onClick={() => handleRemove(value._id)}
                                     aria-label="Remove"
                                     icon={<DeleteIcon />}
                                 />
