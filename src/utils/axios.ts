@@ -1,7 +1,7 @@
 import { getAccessToken } from './localStorage'
 import { default as axiosBase } from 'axios'
 
-const protocol = import.meta.env.PROD ? 'https' : 'http'
+const protocol = import.meta.env.PROD ? 'https' : 'https'
 const serveUrl = `${protocol}://${import.meta.env.VITE_API_BASE_URL}/v1`
 console.log(serveUrl)
 const axios = axiosBase.create({

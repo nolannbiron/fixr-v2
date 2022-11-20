@@ -72,3 +72,39 @@ export const useDeleteStudioPicture = () => {
         }
     )
 }
+
+export const useCreateStudioDetails = ({ studioId, type }: { studioId?: string; type: keyof IStudio['details'] }) => {
+    const queryClient = useQueryClient()
+    return useMutation<ResponseStudio, AxiosError, { data: string }, ResponseStudio>(
+        ({ data }) => axios.post(`/studio/${studioId}/${type}`, { data }).then((res) => res.data),
+        {
+            onSuccess: () => {
+                queryClient.invalidateQueries(studioKeys.all)
+            },
+        }
+    )
+}
+
+export const useUpdateStudioDetails = ({ studioId, type }: { studioId?: string; type: keyof IStudio['details'] }) => {
+    const queryClient = useQueryClient()
+    return useMutation<ResponseStudio, AxiosError, { data: string; id: string }, ResponseStudio>(
+        ({ data, id }) => axios.patch(`/studio/${studioId}/${type}/${id}`, { data }).then((res) => res.data),
+        {
+            onSuccess: () => {
+                queryClient.invalidateQueries(studioKeys.all)
+            },
+        }
+    )
+}
+
+export const useDeleteStudioDetails = ({ studioId, type }: { studioId?: string; type: keyof IStudio['details'] }) => {
+    const queryClient = useQueryClient()
+    return useMutation<ResponseStudio, AxiosError, { id: string }, ResponseStudio>(
+        ({ id }) => axios.delete(`/studio/${studioId}/${type}/${id}`).then((res) => res.data),
+        {
+            onSuccess: () => {
+                queryClient.invalidateQueries(studioKeys.all)
+            },
+        }
+    )
+}

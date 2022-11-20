@@ -2,7 +2,7 @@ import { Spinner, Stack, StackDivider } from '@chakra-ui/react'
 import AddressForm from './forms/AddressCard'
 import FormLayout from '../../components/FormLayout/FormLayout'
 import DetailsCard from './forms/DetailsCard'
-import RulesCard from './forms/RulesCard'
+import RulesCard from './forms/ListItems'
 import { useApp } from '../../contexts/AppContext'
 import { useGetStudio } from '../../api/studio/useStudio'
 
@@ -15,6 +15,8 @@ export default function StudioPage(): JSX.Element {
     if (isLoading) return <Spinner />
     if (!data || isError) return <></>
 
+    console.log(data)
+
     return (
         <Stack spacing="5" divider={<StackDivider />}>
             <FormLayout title="ℹ️ Général" description="Ces informations seront visibles par tous.">
@@ -24,10 +26,10 @@ export default function StudioPage(): JSX.Element {
                 <AddressForm studio={data.studio} flex={1} maxW={{ base: 'full', lg: '3xl' }} />
             </FormLayout>
             <FormLayout title="🍭 Extras" description="Les extras que vous proposez.">
-                <RulesCard flex={1} maxW={{ base: 'full', lg: '3xl' }} />
+                <RulesCard detailsKey="extras" studio={data.studio} flex={1} maxW={{ base: 'full', lg: '3xl' }} />
             </FormLayout>
             <FormLayout title="🔒 Règles" description="Les règles de votre studio.">
-                <RulesCard flex={1} maxW={{ base: 'full', lg: '3xl' }} />
+                <RulesCard detailsKey="rules" studio={data.studio} flex={1} maxW={{ base: 'full', lg: '3xl' }} />
             </FormLayout>
         </Stack>
     )

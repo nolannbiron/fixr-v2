@@ -7,6 +7,11 @@ export interface IPicture {
     url: string
 }
 
+export interface StudioDetails {
+    id: string
+    data: string
+}
+
 export interface IStudio {
     id: string
     name: string
@@ -22,6 +27,10 @@ export interface IStudio {
         theme: {
             color: string
         }
+    }
+    details: {
+        rules?: StudioDetails[]
+        extras?: StudioDetails[]
     }
     address: {
         fullName?: string
@@ -49,6 +58,10 @@ export interface ServerStudio {
         theme: {
             color: string
         }
+    }
+    details: {
+        rules?: StudioDetails[]
+        extras?: StudioDetails[]
     }
     address: {
         fullName?: string
