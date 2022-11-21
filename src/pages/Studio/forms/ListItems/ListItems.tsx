@@ -1,35 +1,27 @@
-import { DeleteIcon } from '@chakra-ui/icons'
-import {
-    BoxProps,
-    Divider,
-    Flex,
-    FormControl,
-    FormHelperText,
-    FormLabel,
-    IconButton,
-    Input,
-    Stack,
-    useToast,
-    VStack,
-} from '@chakra-ui/react'
+import { BoxProps, Divider, FormControl, FormHelperText, FormLabel, Stack, useToast, VStack } from '@chakra-ui/react'
 import { useEffect, useState } from 'react'
-import { IStudio } from '../../../api/studio/types'
-import { useCreateStudioDetails, useDeleteStudioDetails, useUpdateStudioDetails } from '../../../api/studio/useStudio'
-import Card from '../../../components/Card/Card'
+import { IStudio } from '../../../../api/studio/types'
+import {
+    useCreateStudioDetails,
+    useDeleteStudioDetails,
+    useUpdateStudioDetails,
+} from '../../../../api/studio/useStudio'
+import Card from '../../../../components/Card/Card'
 import NewListItem from './NewListItem'
+import ListItem from './Item'
 
 interface Props extends BoxProps {
     studio: IStudio
     detailsKey: keyof IStudio['details']
+    subtitle?: string
 }
 
-export default function RulesCard({ studio, detailsKey, ...props }: Props): JSX.Element {
+export default function RulesCard({ studio, subtitle, detailsKey, ...props }: Props): JSX.Element {
     const [values, setValues] = useState(studio.details[detailsKey])
     const { mutate: add } = useCreateStudioDetails({ studioId: studio.id, type: detailsKey })
     const { mutate: remove } = useDeleteStudioDetails({ studioId: studio.id, type: detailsKey })
     const { mutate: update } = useUpdateStudioDetails({ studioId: studio.id, type: detailsKey })
     const toast = useToast({ position: 'top-right' })
-    // const [debouncedValues, setDebouncedValues] = useState(values)
 
     useEffect(() => {
         setValues(studio.details[detailsKey])
@@ -86,26 +78,20 @@ export default function RulesCard({ studio, detailsKey, ...props }: Props): JSX.
     return (
         <Card {...props}>
             <Stack spacing="5" px={{ base: '4', md: '6' }} py={{ base: '5', md: '6' }}>
-                <FormControl id="bio">
+                <FormControl id={detailsKey}>
                     <FormLabel>{detailsKey}</FormLabel>
                     <VStack spacing={3}>
-                        {values?.map((value, index) => (
-                            <Flex w="full" key={value._id}>
-                                <Input
-                                    onChange={(e) => handleUpdate(e.currentTarget.value, value._id)}
-                                    key={index}
-                                    value={value.data}
-                                />
-                                <IconButton
-                                    onClick={() => handleRemove(value._id)}
-                                    aria-label="Remove"
-                                    icon={<DeleteIcon />}
-                                />
-                            </Flex>
+                        {values?.map((item) => (
+                            <ListItem
+                                key={item._id}
+                                value={item.data}
+                                onRemove={() => handleRemove(item._id)}
+                                onUpdate={(value) => handleUpdate(value, item._id)}
+                            />
                         ))}
                     </VStack>
                     <NewListItem onAdd={handleAdd} />
-                    <FormHelperText color="subtle">Write a short introduction about yourself</FormHelperText>
+                    <FormHelperText color="subtle">{subtitle}</FormHelperText>
                 </FormControl>
             </Stack>
             <Divider />
